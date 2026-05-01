@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>APEX PRODUCTIONS — Where Stories Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── Reset & Variables ── */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0a0a0a;
+    --deep: #111111;
+    --card: #181818;
+    --border: rgba(255,255,255,0.08);
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #f5f0e8;
+    --text: #d8d3cb;
+    --muted: #7a7570;
+    --red: #9b2020;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── Custom Cursor ── */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.25s, height 0.25s;
+  }
+  body:hover .cursor { opacity: 1; }
+  a:hover ~ .cursor, button:hover ~ .cursor { width: 16px; height: 16px; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; width: 100%;
+    padding: 20px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, transparent 100%);
+    transition: background 0.3s;
+  }
+  nav.scrolled { background: rgba(10,10,10,0.97); border-bottom: 1px solid var(--border); }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--cream); }
+
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    font-weight: 400;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 9px 22px;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--gold); color: var(--black); }
+
+  /* ── Hero ── */
+  #hero {
+    height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 30%, rgba(155,32,32,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 20% 80%, rgba(201,168,76,0.07) 0%, transparent 55%),
+      linear-gradient(160deg, #0a0a0a 40%, #1a0f0f 100%);
+  }
+
+  .hero-grain {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.6; pointer-events: none;
+  }
+
+  .hero-line-top {
+    position: absolute; top: 0; left: 60px; right: 60px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    opacity: 0.3;
+  }
+
+  .hero-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(12rem, 22vw, 20rem);
+    line-height: 0.85;
+    color: rgba(255,255,255,0.025);
+    position: absolute;
+    right: -20px; bottom: -20px;
+    letter-spacing: -0.02em;
+    user-select: none;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
+    font-weight: 300;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--cream);
+    max-width: 760px;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.5s forwards;
+  }
+  .hero-title em { font-style: italic; color: var(--gold-light); }
+
+  .hero-sub {
+    margin-top: 28px;
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 400px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.7s forwards;
+  }
+
+  .hero-actions {
+    margin-top: 40px;
+    display: flex; gap: 20px; align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.9s forwards;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    padding: 14px 36px;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+    cursor: none;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .btn-ghost {
+    color: var(--text);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+    transition: color 0.2s;
+    cursor: none;
+  }
+  .btn-ghost::after { content: '→'; transition: transform 0.2s; }
+  .btn-ghost:hover { color: var(--gold); }
+  .btn-ghost:hover::after { transform: translateX(4px); }
+
+  .scroll-indicator {
+    position: absolute; right: 60px; bottom: 80px;
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    opacity: 0; animation: fadeUp 1s 1.2s forwards;
+  }
+  .scroll-indicator span {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); writing-mode: vertical-rl;
+  }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: pulse 2s infinite;
+  }
+
+  /* ── Section Base ── */
+  section { padding: 120px 60px; }
+
+  .section-label {
+    font-size: 0.68rem; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .section-label::before {
+    content: ''; display: block; width: 40px; height: 1px; background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--cream);
+  }
+  .section-title em { font-style: italic; color: var(--gold-light); }
+
+  /* ── About ── */
+  #about {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    background: var(--deep);
+    border-top: 1px solid var(--border);
+  }
+
+  .about-visual {
+    position: relative; aspect-ratio: 3/4;
+    background: var(--card);
+    overflow: hidden;
+  }
+  .about-visual::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.15) 0%, rgba(155,32,32,0.1) 100%);
+  }
+  .about-visual-inner {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 8rem; font-weight: 300;
+    color: rgba(201,168,76,0.12);
+    letter-spacing: -0.05em;
+  }
+  .about-tag {
+    position: absolute; bottom: 24px; left: 24px;
+    background: var(--gold); color: var(--black);
+    padding: 8px 16px;
+    font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .about-content { padding: 20px 0; }
+  .about-content p {
+    font-size: 1rem; line-height: 1.85; color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .about-content p strong { color: var(--text); font-weight: 400; }
+
+  .about-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 30px; margin-top: 48px;
+    border-top: 1px solid var(--border); padding-top: 40px;
+  }
+  .stat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.2rem; color: var(--gold); line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.72rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ── Vision ── */
+  #vision {
+    background: var(--black);
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .vision-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(201,168,76,0.05) 0%, transparent 70%);
+  }
+  .vision-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--cream);
+    max-width: 900px;
+    margin: 40px auto;
+    position: relative;
+  }
+  .vision-quote::before {
+    content: '"';
+    font-size: 8rem; line-height: 0;
+    color: rgba(201,168,76,0.15);
+    position: absolute; top: 30px; left: -20px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .vision-pillars {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-top: 80px;
+  }
+  .pillar {
+    background: var(--card);
+    padding: 48px 40px;
+    text-align: left;
+    border-top: 2px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .pillar::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.05) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .pillar:hover { border-top-color: var(--gold); }
+  .pillar:hover::after { opacity: 1; }
+  .pillar-icon {
+    width: 48px; height: 48px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    font-size: 1.4rem;
+  }
+  .pillar h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400;
+    color: var(--cream); margin-bottom: 12px;
+  }
+  .pillar p { font-size: 0.9rem; line-height: 1.75; color: var(--muted); }
+
+  /* ── Productions ── */
+  #productions {
+    background: var(--deep);
+    border-top: 1px solid var(--border);
+  }
+  .productions-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 60px;
+  }
+  .productions-filter {
+    display: flex; gap: 4px;
+  }
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 8px 18px;
+    font-size: 0.72rem; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--gold); border-color: var(--gold); color: var(--black);
+  }
+
+  .productions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .production-card {
+    background: var(--card);
+    position: relative; overflow: hidden;
+    aspect-ratio: 2/3;
+    cursor: none;
+    transition: transform 0.3s;
+  }
+  .production-card:hover { z-index: 1; }
+  .production-card:nth-child(1) { grid-column: span 2; aspect-ratio: auto; min-height: 500px; }
+
+  .prod-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.5s ease;
+  }
+  .production-card:hover .prod-bg { transform: scale(1.04); }
+
+  .prod-bg-1 { background: linear-gradient(135deg, #1a0a0a 0%, #2d1515 40%, #1a1a2e 100%); }
+  .prod-bg-2 { background: linear-gradient(135deg, #0a1a0a 0%, #1a2d15 40%, #2e1a0a 100%); }
+  .prod-bg-3 { background: linear-gradient(135deg, #0a0a1a 0%, #151528 40%, #2e2a0a 100%); }
+  .prod-bg-4 { background: linear-gradient(135deg, #1a1a0a 0%, #2d2a15 40%, #1a0a1a 100%); }
+  .prod-bg-5 { background: linear-gradient(135deg, #1a0a1a 0%, #2d152d 40%, #0a1a1a 100%); }
+
+  .prod-pattern {
+    position: absolute; inset: 0;
+    opacity: 0.08;
+    background-image: repeating-linear-gradient(
+      45deg, var(--gold) 0px, var(--gold) 1px, transparent 1px, transparent 20px
+    );
+  }
+
+  .prod-number {
+    position: absolute; top: 24px; right: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem; color: rgba(255,255,255,0.06);
+    line-height: 1;
+  }
+
+  .prod-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 32px;
+    background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, transparent 100%);
+  }
+  .prod-status {
+    display: inline-block;
+    font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 4px 10px;
+    margin-bottom: 10px;
+  }
+  .status-upcoming { background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+  .status-current { background: rgba(155,32,32,0.3); color: #e05555; border: 1px solid rgba(155,32,32,0.4); }
+  .status-past { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
+
+  .prod-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 300; color: var(--cream); line-height: 1.2;
+  }
+  .production-card:nth-child(1) .prod-title { font-size: 2.8rem; }
+  .prod-meta {
+    display: flex; gap: 16px; margin-top: 10px;
+    font-size: 0.78rem; color: var(--muted);
+  }
+  .prod-meta span { display: flex; align-items: center; gap: 6px; }
+
+  .prod-overlay {
+    position: absolute; inset: 0;
+    background: rgba(10,10,10,0.85);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    opacity: 0; transition: opacity 0.3s;
+    padding: 32px;
+    text-align: center;
+  }
+  .production-card:hover .prod-overlay { opacity: 1; }
+  .prod-overlay p { font-size: 0.9rem; color: var(--text); line-height: 1.7; margin-bottom: 24px; }
+  .prod-overlay a {
+    color: var(--gold);
+    font-size: 0.75rem; letter-spacing: 0.15em;
+    text-transform: uppercase; text-decoration: none;
+    border-bottom: 1px solid rgba(201,168,76,0.4);
+    padding-bottom: 3px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .prod-overlay a:hover { color: var(--gold-light); border-color: var(--gold-light); }
+
+  /* ── Credits & Crew ── */
+  #crew {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+  }
+  .crew-tabs {
+    display: flex; gap: 0; margin-bottom: 60px;
+    border-bottom: 1px solid var(--border);
+  }
+  .crew-tab {
+    padding: 14px 28px;
+    font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); cursor: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    background: none; border-left: none; border-right: none; border-top: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .crew-tab.active, .crew-tab:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .crew-panel { display: none; }
+  .crew-panel.active { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+
+  .crew-card {
+    background: var(--card);
+    padding: 36px 28px;
+    position: relative;
+    transition: background 0.2s;
+  }
+  .crew-card:hover { background: #1f1f1f; }
+  .crew-avatar {
+    width: 60px; height: 60px;
+    background: var(--deep);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; color: var(--gold);
+    position: relative; overflow: hidden;
+  }
+  .crew-avatar-bg {
+    position: absolute; inset: 0;
+    opacity: 0.3;
+  }
+  .crew-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem; font-weight: 400; color: var(--cream);
+  }
+  .crew-role {
+    font-size: 0.7rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold);
+    margin-top: 6px; margin-bottom: 12px;
+  }
+  .crew-bio { font-size: 0.85rem; line-height: 1.65; color: var(--muted); }
+  .crew-credits {
+    margin-top: 16px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .credit-tag {
+    font-size: 0.65rem; letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    background: rgba(201,168,76,0.1);
+    color: var(--muted);
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+
+  /* ── Credits Block ── */
+  #credits {
+    background: var(--deep);
+    border-top: 1px solid var(--border);
+  }
+  .credits-list {
+    margin-top: 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+  }
+  .credits-production {
+    background: var(--card);
+    padding: 40px;
+  }
+  .credits-prod-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 300; color: var(--cream);
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .credits-prod-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; color: rgba(201,168,76,0.3);
+  }
+  .credit-row {
+    display: flex; justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .credit-row:last-child { border-bottom: none; }
+  .credit-role-label { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.05em; }
+  .credit-person { font-size: 0.88rem; color: var(--text); }
+
+  /* ── Contact ── */
+  #contact {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px;
+  }
+
+  .contact-info { padding: 20px 0; }
+  .contact-info p { font-size: 1rem; line-height: 1.85; color: var(--muted); margin-top: 24px; margin-bottom: 40px; }
+  .contact-detail {
+    display: flex; gap: 16px; align-items: flex-start;
+    margin-bottom: 24px;
+  }
+  .contact-icon {
+    width: 40px; height: 40px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+    color: var(--gold);
+  }
+  .contact-detail-text strong {
+    display: block; font-size: 0.7rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 4px; font-weight: 400;
+  }
+  .contact-detail-text span { font-size: 0.95rem; color: var(--text); }
+
+  .contact-social { display: flex; gap: 12px; margin-top: 40px; }
+  .social-link {
+    width: 40px; height: 40px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 0.85rem;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .social-link:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── Google Form Embed ── */
+  .contact-form-wrapper {
+    background: var(--card);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+  }
+  .contact-form-wrapper::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(to right, var(--gold), var(--red));
+  }
+  .form-header {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 300; color: var(--cream);
+  }
+  .form-header p { font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
+
+  .google-form-notice {
+    padding: 24px 32px;
+    background: rgba(201,168,76,0.05);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem; color: var(--muted); line-height: 1.6;
+  }
+  .google-form-notice strong { color: var(--gold); }
+
+  /* Styled fallback form */
+  .styled-form { padding: 32px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+  .form-group label {
+    font-size: 0.7rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--deep);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--gold); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-group select option { background: var(--deep); }
+
+  .form-submit {
+    width: 100%;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 14px;
+    font-size: 0.82rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+    cursor: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .form-submit:hover { background: var(--gold-light); }
+
+  .gform-link {
+    display: block; text-align: center;
+    margin-top: 16px;
+    font-size: 0.78rem; color: var(--muted);
+  }
+  .gform-link a { color: var(--gold); text-decoration: none; }
+  .gform-link a:hover { color: var(--gold-light); }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--deep);
+    border-top: 1px solid var(--border);
+    padding: 60px 60px 40px;
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 60px; padding-bottom: 50px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-brand .nav-logo { font-size: 2rem; display: block; margin-bottom: 16px; }
+  .footer-brand p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; max-width: 260px; }
+  .footer-col h4 {
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px; font-weight: 400;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul a {
+    font-size: 0.88rem; color: var(--muted); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-col ul a:hover { color: var(--gold); }
+  .footer-bottom {
+    padding-top: 30px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-bottom p { font-size: 0.78rem; color: var(--muted); }
+  .footer-bottom a { color: var(--gold); text-decoration: none; }
+
+  /* ── Hosting Section ── */
+  #hosting {
+    background: var(--black);
+    border-top: 1px solid var(--border);
+  }
+  .hosting-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; margin-top: 60px;
+  }
+  .hosting-card {
+    background: var(--card);
+    padding: 36px 32px;
+    position: relative;
+    border-top: 2px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .hosting-card:hover { border-top-color: var(--gold); }
+  .hosting-card.recommended {
+    border-top-color: var(--gold);
+    background: linear-gradient(135deg, #1f1a0f 0%, var(--card) 60%);
+  }
+  .hosting-badge {
+    position: absolute; top: -1px; right: 24px;
+    background: var(--gold); color: var(--black);
+    font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 4px 10px; font-weight: 500;
+  }
+  .hosting-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; color: var(--gold);
+    margin-bottom: 8px; letter-spacing: 0.1em;
+  }
+  .hosting-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; color: var(--cream);
+    margin-bottom: 16px;
+  }
+  .hosting-price span { font-size: 1rem; color: var(--muted); }
+  .hosting-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; margin-bottom: 20px; }
+  .hosting-features { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .hosting-features li {
+    font-size: 0.82rem; color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hosting-features li::before { content: '✓'; color: var(--gold); font-size: 0.8rem; }
+  .hosting-link {
+    display: inline-block; margin-top: 24px;
+    color: var(--gold); font-size: 0.75rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .hosting-link:hover { color: var(--gold-light); border-color: var(--gold-light); }
+
+  .cd-section {
+    margin-top: 60px; padding: 40px;
+    background: var(--card); border: 1px solid var(--border);
+  }
+  .cd-section h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 300; color: var(--cream);
+    margin-bottom: 24px;
+  }
+  .cd-steps {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 0; position: relative;
+  }
+  .cd-steps::before {
+    content: '';
+    position: absolute; top: 20px; left: 10%; right: 10%;
+    height: 1px; background: linear-gradient(to right, var(--gold), rgba(201,168,76,0.1));
+  }
+  .cd-step { text-align: center; padding: 0 16px; position: relative; }
+  .cd-step-num {
+    width: 40px; height: 40px;
+    background: var(--gold); color: var(--black);
+    font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .cd-step h4 { font-size: 0.8rem; color: var(--cream); margin-bottom: 6px; font-weight: 400; }
+  .cd-step p { font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    nav { padding: 20px 30px; }
+    section { padding: 80px 30px; }
+    #about { grid-template-columns: 1fr; gap: 40px; }
+    .about-visual { aspect-ratio: 16/9; }
+    .crew-panel.active { grid-template-columns: repeat(2, 1fr); }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .cd-steps { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .cd-steps::before { display: none; }
+    #hero { padding: 0 30px 60px; }
+    #contact { grid-template-columns: 1fr; gap: 40px; }
+    .productions-grid { grid-template-columns: 1fr 1fr; }
+    .production-card:nth-child(1) { grid-column: span 2; }
+    .hosting-grid { grid-template-columns: 1fr; }
+    .vision-pillars { grid-template-columns: 1fr; }
+    .credits-list { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .productions-grid { grid-template-columns: 1fr; }
+    .production-card:nth-child(1) { grid-column: span 1; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+    .crew-panel.active { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#hero" class="nav-logo">APEX<span> Productions</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#vision">Vision</a></li>
+    <li><a href="#productions">Productions</a></li>
+    <li><a href="#crew">Crew</a></li>
+    <li><a href="#credits">Credits</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Work With Us</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-line-top"></div>
+  <div class="hero-number">AP</div>
+
+  <p class="hero-eyebrow">Est. 2008 · New York · Los Angeles</p>
+  <h1 class="hero-title">Where <em>Stories</em><br>Find Their Stage</h1>
+  <p class="hero-sub">Award-winning production team crafting theatrical, film, and live experiences that move audiences and shape culture.</p>
+  <div class="hero-actions">
+    <a href="#productions" class="btn-primary">Upcoming Productions</a>
+    <a href="#about" class="btn-ghost">Our Story</a>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual reveal">
+    <div class="about-visual-inner">AP</div>
+    <div class="about-tag">Since 2008</div>
+  </div>
+  <div class="about-content reveal">
+    <p class="section-label">About Us</p>
+    <h2 class="section-title">Crafting <em>moments</em><br>that endure</h2>
+    <p style="margin-top:28px"><strong>APEX Productions</strong> is a full-service production company headquartered in New York with a west-coast studio in Los Angeles. We work across theatre, film, television, and live events — bringing together some of the most talented creative minds in the industry.</p>
+    <p>Founded in 2008 by artistic director <strong>Elena Marchetti</strong> and executive producer <strong>David Osei</strong>, we have grown from a two-person team into a 40-strong company with global reach. Our work has been recognized at the Tony Awards, Sundance, BAFTA, and Edinburgh Festival.</p>
+    <p>We believe great stories have the power to challenge, heal, and transform. Every production we undertake is a commitment to that belief.</p>
+    <div class="about-stats">
+      <div>
+        <div class="stat-number">80+</div>
+        <div class="stat-label">Productions</div>
+      </div>
+      <div>
+        <div class="stat-number">17</div>
+        <div class="stat-label">Major Awards</div>
+      </div>
+      <div>
+        <div class="stat-number">40+</div>
+        <div class="stat-label">Team Members</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISION -->
+<section id="vision">
+  <div class="vision-bg"></div>
+  <p class="section-label" style="justify-content:center">Our Vision</p>
+  <div class="vision-quote reveal">
+    We believe in the radical power of live storytelling — that a single shared evening in the dark can shift the way we see the world, each other, and ourselves.
+  </div>
+  <div class="vision-pillars reveal">
+    <div class="pillar">
+      <div class="pillar-icon">🎭</div>
+      <h3>Artistic Integrity</h3>
+      <p>We never compromise on creative vision. Every production begins with a strong artistic point-of-view and a commitment to bringing it fully to life, without shortcuts.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🌍</div>
+      <h3>Inclusive Storytelling</h3>
+      <p>We actively seek out stories from underrepresented voices and build teams that reflect the full diversity of the world we live in. Our stage is for everyone.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">⚡</div>
+      <h3>Fearless Innovation</h3>
+      <p>From immersive staging to cutting-edge technical design, we push boundaries. We treat every production as an opportunity to advance what live performance can be.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTIONS -->
+<section id="productions">
+  <div class="productions-header reveal">
+    <div>
+      <p class="section-label">Productions</p>
+      <h2 class="section-title">Upcoming &amp; <em>Current</em></h2>
+    </div>
+    <div class="productions-filter">
+      <button class="filter-btn active" onclick="filterProductions('all', this)">All</button>
+      <button class="filter-btn" onclick="filterProductions('theatre', this)">Theatre</button>
+      <button class="filter-btn" onclick="filterProductions('film', this)">Film</button>
+      <button class="filter-btn" onclick="filterProductions('live', this)">Live</button>
+    </div>
+  </div>
+  <div class="productions-grid reveal" id="productionsGrid">
+    <!-- Card 1 - featured -->
+    <div class="production-card" data-type="theatre">
+      <div class="prod-bg prod-bg-1"></div>
+      <div class="prod-pattern"></div>
+      <div class="prod-number">01</div>
+      <div class="prod-overlay">
+        <p>A haunting adaptation of a classic text, reimagined for a contemporary audience. Starring <strong>Naomi Yates</strong> and <strong>Marcus Chen</strong> in the leading roles.</p>
+        <a href="#">Book Tickets →</a>
+      </div>
+      <div class="prod-info">
+        <span class="prod-status status-current">● Now Playing</span>
+        <div class="prod-title">The Hollow Season</div>
+        <div class="prod-meta">
+          <span>🎭 Broadway — Belasco Theatre</span>
+          <span>📅 Through Aug 2026</span>
+        </div>
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="production-card" data-type="film">
+      <div class="prod-bg prod-bg-2"></div>
+      <div class="prod-pattern"></div>
+      <div class="prod-number">02</div>
+      <div class="prod-overlay">
+        <p>An intimate drama following three generations of a family confronting a shared secret. Directed by <strong>Priya Ramaswamy</strong>.</p>
+        <a href="#">Learn More →</a>
+      </div>
+      <div class="prod-info">
+        <span class="prod-status status-upcoming">◇ Upcoming</span>
+        <div class="prod-title">Before the Light Breaks</div>
+        <div class="prod-meta">
+          <span>🎬 Feature Film</span>
+          <span>📅 Fall 2026</span>
+        </div>
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="production-card" data-type="theatre">
+      <div class="prod-bg prod-bg-3"></div>
+      <div class="prod-pattern"></div>
+      <div class="prod-number">03</div>
+      <div class="prod-overlay">
+        <p>A world premiere musical exploring the tension between tradition and modernity in a rapidly changing city. Score by <strong>Adaeze Obi</strong>.</p>
+        <a href="#">Preview Info →</a>
+      </div>
+      <div class="prod-info">
+        <span class="prod-status status-upcoming">◇ Previews Jun 2026</span>
+        <div class="prod-title">Neon Ancestors</div>
+        <div class="prod-meta">
+          <span>🎵 Musical — Off-Broadway</span>
+          <span>📅 Opens Jul 2026</span>
+        </div>
+      </div>
+    </div>
+    <!-- Card 4 -->
+    <div class="production-card" data-type="live">
+      <div class="prod-bg prod-bg-4"></div>
+      <div class="prod-pattern"></div>
+      <div class="prod-number">04</div>
+      <div class="prod-overlay">
+        <p>A site-specific immersive event for 500 guests exploring collective memory. A collaboration with visual artists <strong>Studio Vanta</strong>.</p>
+        <a href="#">Event Details →</a>
+      </div>
+      <div class="prod-info">
+        <span class="prod-status status-upcoming">◇ Sep 2026</span>
+        <div class="prod-title">Echoes in the Archive</div>
+        <div class="prod-meta">
+          <span>🌀 Immersive Event</span>
+          <span>📅 Brooklyn Navy Yard</span>
+        </div>
+      </div>
+    </div>
+    <!-- Card 5 -->
+    <div class="production-card" data-type="theatre">
+      <div class="prod-bg prod-bg-5"></div>
+      <div class="prod-pattern"></div>
+      <div class="prod-number">05</div>
+      <div class="prod-overlay">
+        <p>A critically acclaimed revival of the 1987 classic, with an all-new design and a company of 20 performers. National tour begins January 2027.</p>
+        <a href="#">Tour Dates →</a>
+      </div>
+      <div class="prod-info">
+        <span class="prod-status status-upcoming">◇ Tour 2027</span>
+        <div class="prod-title">Glass Meridian (Revival)</div>
+        <div class="prod-meta">
+          <span>🎭 National Tour</span>
+          <span>📅 Jan–Jun 2027</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CREW -->
+<section id="crew">
+  <div class="reveal">
+    <p class="section-label">Technical &amp; Creative</p>
+    <h2 class="section-title">Meet the <em>Team</em></h2>
+  </div>
+  <div class="crew-tabs reveal" style="margin-top:40px">
+    <button class="crew-tab active" onclick="switchTab('leadership', this)">Leadership</button>
+    <button class="crew-tab" onclick="switchTab('creative', this)">Creative</button>
+    <button class="crew-tab" onclick="switchTab('technical', this)">Technical Crew</button>
+    <button class="crew-tab" onclick="switchTab('production', this)">Production</button>
+  </div>
+
+  <!-- Leadership -->
+  <div class="crew-panel active" id="tab-leadership">
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#c9a84c,#9b2020)"></div>
+        EM
+      </div>
+      <div class="crew-name">Elena Marchetti</div>
+      <div class="crew-role">Artistic Director & Co-Founder</div>
+      <div class="crew-bio">Elena has led APEX since its inception. A graduate of RADA, she has directed over 30 productions and won the Olivier Award for Best Director twice.</div>
+      <div class="crew-credits">
+        <span class="credit-tag">Olivier Award</span>
+        <span class="credit-tag">Tony Nominee</span>
+        <span class="credit-tag">RADA</span>
+      </div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#2d6a2d,#1a1a4e)"></div>
+        DO
+      </div>
+      <div class="crew-name">David Osei</div>
+      <div class="crew-role">Executive Producer & Co-Founder</div>
+      <div class="crew-bio">David oversees all productions from development to closing night. Former VP at Lincoln Center, he has managed budgets exceeding $80M.</div>
+      <div class="crew-credits">
+        <span class="credit-tag">Lincoln Center</span>
+        <span class="credit-tag">Tony Producer</span>
+        <span class="credit-tag">PGA Member</span>
+      </div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#1a2d4e,#4e1a2d)"></div>
+        SR
+      </div>
+      <div class="crew-name">Sophie Renaud</div>
+      <div class="crew-role">General Manager</div>
+      <div class="crew-bio">Sophie manages the day-to-day operations across all productions and touring productions, coordinating a team of 40+ full-time staff.</div>
+      <div class="crew-credits">
+        <span class="credit-tag">Operations</span>
+        <span class="credit-tag">Touring</span>
+        <span class="credit-tag">HR</span>
+      </div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#4e3a1a,#1a4e3a)"></div>
+        JK
+      </div>
+      <div class="crew-name">James Kwon</div>
+      <div class="crew-role">Head of Development</div>
+      <div class="crew-bio">James identifies and develops new projects, managing relationships with writers, estates, and rights holders across three continents.</div>
+      <div class="crew-credits">
+        <span class="credit-tag">Literary</span>
+        <span class="credit-tag">Rights</span>
+        <span class="credit-tag">Development</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Creative -->
+  <div class="crew-panel" id="tab-creative">
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#2d1a4e,#4e2d1a)"></div>
+        PR
+      </div>
+      <div class="crew-name">Priya Ramaswamy</div>
+      <div class="crew-role">Director</div>
+      <div class="crew-bio">Specializing in new work, Priya has developed 14 world premieres with APEX. Her film work earned a Sundance Special Jury Prize in 2024.</div>
+      <div class="crew-credits"><span class="credit-tag">Sundance</span><span class="credit-tag">New Work</span></div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#4e1a1a,#1a4e4e)"></div>
+        AO
+      </div>
+      <div class="crew-name">Adaeze Obi</div>
+      <div class="crew-role">Composer & Music Director</div>
+      <div class="crew-bio">Adaeze has composed scores for 22 productions. Her musical Neon Ancestors marks her fourth collaboration with APEX.</div>
+      <div class="crew-credits"><span class="credit-tag">BMI Winner</span><span class="credit-tag">Musicals</span></div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#1a4e1a,#4e4e1a)"></div>
+        TL
+      </div>
+      <div class="crew-name">Tom Lau</div>
+      <div class="crew-role">Set & Production Designer</div>
+      <div class="crew-bio">Tom's transformative set designs have defined the visual language of APEX. Known for maximalist environments and architectural precision.</div>
+      <div class="crew-credits"><span class="credit-tag">Tony Nominee</span><span class="credit-tag">Set Design</span></div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#2d4e1a,#1a2d4e)"></div>
+        ZH
+      </div>
+      <div class="crew-name">Zara Hassan</div>
+      <div class="crew-role">Costume Designer</div>
+      <div class="crew-bio">Zara brings characters to life through meticulous costume work, blending historical research with contemporary aesthetics across every genre.</div>
+      <div class="crew-credits"><span class="credit-tag">Costume</span><span class="credit-tag">Film & Stage</span></div>
+    </div>
+  </div>
+
+  <!-- Technical -->
+  <div class="crew-panel" id="tab-technical">
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#1a3a4e,#4e3a1a)"></div>
+        MF
+      </div>
+      <div class="crew-name">Marco Ferretti</div>
+      <div class="crew-role">Head of Lighting</div>
+      <div class="crew-bio">Marco designs and programs all lighting across APEX productions. Certified on GrandMA3, Eos, and Chamsys platforms. 15 years in the industry.</div>
+      <div class="crew-credits"><span class="credit-tag">GrandMA3</span><span class="credit-tag">ETC Eos</span><span class="credit-tag">15yr exp</span></div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#4e1a3a,#1a4e2d)"></div>
+        RC
+      </div>
+      <div class="crew-name">Rachel Chou</div>
+      <div class="crew-role">Head of Sound</div>
+      <div class="crew-bio">Rachel is a BAFTA-nominated sound designer with expertise in large-scale immersive audio, binaural sound, and musical reinforcement systems.</div>
+      <div class="crew-credits"><span class="credit-tag">BAFTA Nom.</span><span class="credit-tag">L-Acoustics</span><span class="credit-tag">Immersive</span></div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#2d4e2d,#4e2d4e)"></div>
+        OB
+      </div>
+      <div class="crew-name">Omar Bashir</div>
+      <div class="crew-role">Video & Projection</div>
+      <div class="crew-bio">Omar leads all video design and live projection mapping. He has designed integrated AV systems for venues from 200 to 20,000 seats.</div>
+      <div class="crew-credits"><span class="credit-tag">Resolume</span><span class="credit-tag">disguise</span><span class="credit-tag">Mapping</span></div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#4e4e1a,#1a3a4e)"></div>
+        LV
+      </div>
+      <div class="crew-name">Lucia Varga</div>
+      <div class="crew-role">Production Stage Manager</div>
+      <div class="crew-bio">Lucia has called over 4,000 shows across Broadway, West End, and international touring. The beating heart of every APEX production.</div>
+      <div class="crew-credits"><span class="credit-tag">Broadway</span><span class="credit-tag">West End</span><span class="credit-tag">4000+ shows</span></div>
+    </div>
+  </div>
+
+  <!-- Production -->
+  <div class="crew-panel" id="tab-production">
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#3a1a4e,#1a4e3a)"></div>
+        NK
+      </div>
+      <div class="crew-name">Nina Kowalski</div>
+      <div class="crew-role">Line Producer</div>
+      <div class="crew-bio">Nina manages day-to-day production logistics including scheduling, vendor contracts, union negotiations, and on-the-ground problem solving.</div>
+      <div class="crew-credits"><span class="credit-tag">IATSE</span><span class="credit-tag">AEA</span><span class="credit-tag">Logistics</span></div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#4e3a2d,#2d4e1a)"></div>
+        BT
+      </div>
+      <div class="crew-name">Ben Torres</div>
+      <div class="crew-role">Technical Director</div>
+      <div class="crew-bio">Ben oversees all technical installations and works closely with venues to ensure safety, structural integrity, and technical excellence.</div>
+      <div class="crew-credits"><span class="credit-tag">Rigging</span><span class="credit-tag">Safety</span><span class="credit-tag">ETCP</span></div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#1a4e4e,#4e1a4e)"></div>
+        IW
+      </div>
+      <div class="crew-name">Imogen Walsh</div>
+      <div class="crew-role">Casting Director</div>
+      <div class="crew-bio">Imogen has cast every APEX theatre production since 2013. She maintains relationships with agents across New York, London, and Sydney.</div>
+      <div class="crew-credits"><span class="credit-tag">Casting</span><span class="credit-tag">CDG Member</span></div>
+    </div>
+    <div class="crew-card reveal">
+      <div class="crew-avatar">
+        <div class="crew-avatar-bg" style="background:linear-gradient(135deg,#2d2d4e,#4e2d2d)"></div>
+        CJ
+      </div>
+      <div class="crew-name">Calvin James</div>
+      <div class="crew-role">Marketing & Press</div>
+      <div class="crew-bio">Calvin leads all marketing, press strategy, and audience development. Former Head of Marketing at the Public Theater.</div>
+      <div class="crew-credits"><span class="credit-tag">Marketing</span><span class="credit-tag">Press</span><span class="credit-tag">Digital</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CREDITS -->
+<section id="credits">
+  <div class="reveal">
+    <p class="section-label">Production Credits</p>
+    <h2 class="section-title">Full <em>Credits</em></h2>
+  </div>
+  <div class="credits-list reveal">
+    <div class="credits-production">
+      <div class="credits-prod-title">
+        The Hollow Season
+        <span class="credits-prod-year">2025</span>
+      </div>
+      <div class="credit-row"><span class="credit-role-label">Director</span><span class="credit-person">Elena Marchetti</span></div>
+      <div class="credit-row"><span class="credit-role-label">Producer</span><span class="credit-person">David Osei</span></div>
+      <div class="credit-row"><span class="credit-role-label">Set Design</span><span class="credit-person">Tom Lau</span></div>
+      <div class="credit-row"><span class="credit-role-label">Costume Design</span><span class="credit-person">Zara Hassan</span></div>
+      <div class="credit-row"><span class="credit-role-label">Lighting Design</span><span class="credit-person">Marco Ferretti</span></div>
+      <div class="credit-row"><span class="credit-role-label">Sound Design</span><span class="credit-person">Rachel Chou</span></div>
+      <div class="credit-row"><span class="credit-role-label">Stage Manager</span><span class="credit-person">Lucia Varga</span></div>
+      <div class="credit-row"><span class="credit-role-label">Casting</span><span class="credit-person">Imogen Walsh CSA</span></div>
+      <div class="credit-row"><span class="credit-role-label">Press Representative</span><span class="credit-person">Calvin James / APEX PR</span></div>
+      <div class="credit-row"><span class="credit-role-label">General Management</span><span class="credit-person">Sophie Renaud / APEX Mgmt</span></div>
+    </div>
+    <div class="credits-production">
+      <div class="credits-prod-title">
+        Before the Light Breaks
+        <span class="credits-prod-year">2026</span>
+      </div>
+      <div class="credit-row"><span class="credit-role-label">Director</span><span class="credit-person">Priya Ramaswamy</span></div>
+      <div class="credit-row"><span class="credit-role-label">Executive Producer</span><span class="credit-person">David Osei</span></div>
+      <div class="credit-row"><span class="credit-role-label">Cinematographer</span><span class="credit-person">Yuki Tanaka ASC</span></div>
+      <div class="credit-row"><span class="credit-role-label">Production Design</span><span class="credit-person">Tom Lau</span></div>
+      <div class="credit-row"><span class="credit-role-label">Costume Design</span><span class="credit-person">Zara Hassan</span></div>
+      <div class="credit-row"><span class="credit-role-label">Original Score</span><span class="credit-person">Adaeze Obi</span></div>
+      <div class="credit-row"><span class="credit-role-label">Sound Mix</span><span class="credit-person">Rachel Chou AMPS</span></div>
+      <div class="credit-row"><span class="credit-role-label">Casting</span><span class="credit-person">Imogen Walsh CSA</span></div>
+      <div class="credit-row"><span class="credit-role-label">Line Producer</span><span class="credit-person">Nina Kowalski</span></div>
+      <div class="credit-row"><span class="credit-role-label">Post Production</span><span class="credit-person">Lighthouse Post, NYC</span></div>
+    </div>
+    <div class="credits-production">
+      <div class="credits-prod-title">
+        Neon Ancestors
+        <span class="credits-prod-year">2026</span>
+      </div>
+      <div class="credit-row"><span class="credit-role-label">Director</span><span class="credit-person">Elena Marchetti</span></div>
+      <div class="credit-row"><span class="credit-role-label">Book, Music & Lyrics</span><span class="credit-person">Adaeze Obi</span></div>
+      <div class="credit-row"><span class="credit-role-label">Choreography</span><span class="credit-person">Santiago Vela</span></div>
+      <div class="credit-row"><span class="credit-role-label">Set Design</span><span class="credit-person">Tom Lau</span></div>
+      <div class="credit-row"><span class="credit-role-label">Lighting Design</span><span class="credit-person">Marco Ferretti</span></div>
+      <div class="credit-row"><span class="credit-role-label">Sound Design</span><span class="credit-person">Rachel Chou</span></div>
+      <div class="credit-row"><span class="credit-role-label">Video Design</span><span class="credit-person">Omar Bashir</span></div>
+      <div class="credit-row"><span class="credit-role-label">Music Direction</span><span class="credit-person">Adaeze Obi</span></div>
+      <div class="credit-row"><span class="credit-role-label">Stage Manager</span><span class="credit-person">Lucia Varga</span></div>
+    </div>
+    <div class="credits-production">
+      <div class="credits-prod-title">
+        Echoes in the Archive
+        <span class="credits-prod-year">2026</span>
+      </div>
+      <div class="credit-row"><span class="credit-role-label">Concept & Direction</span><span class="credit-person">Elena Marchetti / Studio Vanta</span></div>
+      <div class="credit-row"><span class="credit-role-label">Producer</span><span class="credit-person">David Osei</span></div>
+      <div class="credit-row"><span class="credit-role-label">Visual Art</span><span class="credit-person">Studio Vanta</span></div>
+      <div class="credit-row"><span class="credit-role-label">Sound Composition</span><span class="credit-person">Rachel Chou</span></div>
+      <div class="credit-row"><span class="credit-role-label">Spatial Video</span><span class="credit-person">Omar Bashir</span></div>
+      <div class="credit-row"><span class="credit-role-label">Lighting</span><span class="credit-person">Marco Ferretti</span></div>
+      <div class="credit-row"><span class="credit-role-label">Technical Director</span><span class="credit-person">Ben Torres</span></div>
+      <div class="credit-row"><span class="credit-role-label">Event Management</span><span class="credit-person">Nina Kowalski</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOSTING -->
+<section id="hosting">
+  <div class="reveal">
+    <p class="section-label">For Developers</p>
+    <h2 class="section-title">Hosting &amp; <em>Deployment</em></h2>
+    <p style="color:var(--muted);margin-top:16px;max-width:560px;line-height:1.7;font-size:0.95rem">Recommended hosting solutions for this website — minimal cost, continuous deployment, and professional results.</p>
+  </div>
+  <div class="hosting-grid reveal">
+    <div class="hosting-card recommended">
+      <div class="hosting-badge">Best Pick</div>
+      <div class="hosting-logo">Vercel</div>
+      <div class="hosting-price">Free <span>/ Hobby tier</span></div>
+      <p>Deploy directly from GitHub with zero config. Instant global CDN, automatic HTTPS, preview deployments on every push, and serverless functions built in.</p>
+      <ul class="hosting-features">
+        <li>GitHub / GitLab / Bitbucket integration</li>
+        <li>Automatic deploys on every git push</li>
+        <li>Global edge CDN (100+ locations)</li>
+        <li>Custom domain + free SSL</li>
+        <li>Preview URLs for every branch</li>
+        <li>Analytics dashboard included</li>
+        <li>Scales to Pro ($20/mo) if needed</li>
+      </ul>
+      <a href="https://vercel.com" target="_blank" class="hosting-link">Visit Vercel →</a>
+    </div>
+    <div class="hosting-card">
+      <div class="hosting-logo">Netlify</div>
+      <div class="hosting-price">Free <span>/ Starter tier</span></div>
+      <p>Powerful static site hosting with continuous deployment, form handling (can replace Google Forms), and a generous free tier for production websites.</p>
+      <ul class="hosting-features">
+        <li>Git-based continuous deployment</li>
+        <li>Built-in form handling (no backend)</li>
+        <li>Split testing / A-B branches</li>
+        <li>Custom domain + free SSL</li>
+        <li>Deploy previews per PR</li>
+        <li>Edge functions support</li>
+      </ul>
+      <a href="https://netlify.com" target="_blank" class="hosting-link">Visit Netlify →</a>
+    </div>
+    <div class="hosting-card">
+      <div class="hosting-logo">Cloudflare Pages</div>
+      <div class="hosting-price">Free <span>/ unlimited bandwidth</span></div>
+      <p>Unlimited bandwidth on the free tier — ideal for high-traffic launch nights. Backed by Cloudflare's world-class security and DDoS protection.</p>
+      <ul class="hosting-features">
+        <li>Unlimited bandwidth (free tier)</li>
+        <li>Git-based auto deployment</li>
+        <li>500 builds/month free</li>
+        <li>Cloudflare DDoS protection</li>
+        <li>Custom domains + SSL</li>
+        <li>Workers / serverless edge functions</li>
+      </ul>
+      <a href="https://pages.cloudflare.com" target="_blank" class="hosting-link">Visit Cloudflare Pages →</a>
+    </div>
+  </div>
+
+  <div class="cd-section reveal">
+    <h3>Continuous Deployment Workflow</h3>
+    <div class="cd-steps">
+      <div class="cd-step">
+        <div class="cd-step-num">1</div>
+        <h4>Push to GitHub</h4>
+        <p>Commit any change to your main branch or open a pull request</p>
+      </div>
+      <div class="cd-step">
+        <div class="cd-step-num">2</div>
+        <h4>Auto Build</h4>
+        <p>Vercel/Netlify detects the push and triggers an automated build</p>
+      </div>
+      <div class="cd-step">
+        <div class="cd-step-num">3</div>
+        <h4>Preview Deploy</h4>
+        <p>A unique preview URL is generated — share with your team for review</p>
+      </div>
+      <div class="cd-step">
+        <div class="cd-step-num">4</div>
+        <h4>Approve & Merge</h4>
+        <p>Merge the PR to main; the production deploy starts automatically</p>
+      </div>
+      <div class="cd-step">
+        <div class="cd-step-num">5</div>
+        <h4>Live in Seconds</h4>
+        <p>Your site is live globally within ~30 seconds of merging</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-info reveal">
+    <p class="section-label">Get In Touch</p>
+    <h2 class="section-title">Let's Make<br><em>Something</em></h2>
+    <p>Whether you're a writer with a project, an investor exploring opportunities, a venue partner, or a collaborating artist — we want to hear from you.</p>
+    <div class="contact-detail">
+      <div class="contact-icon">📍</div>
+      <div class="contact-detail-text">
+        <strong>Main Office</strong>
+        <span>630 West 42nd Street, Suite 2000<br>New York, NY 10036</span>
+      </div>
+    </div>
+    <div class="contact-detail">
+      <div class="contact-icon">📞</div>
+      <div class="contact-detail-text">
+        <strong>Phone</strong>
+        <span>+1 (212) 555-0182</span>
+      </div>
+    </div>
+    <div class="contact-detail">
+      <div class="contact-icon">✉️</div>
+      <div class="contact-detail-text">
+        <strong>General Enquiries</strong>
+        <span>hello@apexproductions.com</span>
+      </div>
+    </div>
+    <div class="contact-detail">
+      <div class="contact-icon">🎭</div>
+      <div class="contact-detail-text">
+        <strong>Submissions</strong>
+        <span>submissions@apexproductions.com</span>
+      </div>
+    </div>
+    <div class="contact-social">
+      <a href="#" class="social-link" title="Instagram">IG</a>
+      <a href="#" class="social-link" title="Twitter/X">𝕏</a>
+      <a href="#" class="social-link" title="Facebook">FB</a>
+      <a href="#" class="social-link" title="LinkedIn">in</a>
+      <a href="#" class="social-link" title="YouTube">YT</a>
+    </div>
+  </div>
+
+  <div class="contact-form-wrapper reveal">
+    <div class="form-header">
+      <h3>Send Us a Message</h3>
+      <p>We typically respond within 2 business days.</p>
+    </div>
+    <div class="google-form-notice">
+      <strong>📋 Google Forms Integration:</strong> Replace the form below with your Google Form by embedding it via
+      <code style="background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:2px">Responses → Get pre-filled link → Embed</code>.
+      Paste the iframe embed code inside <code style="background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:2px">.contact-form-wrapper</code>.
+      All responses go directly to your Google Sheet. See the <a href="https://support.google.com/docs/answer/2839588" target="_blank" style="color:var(--gold);text-decoration:none">Google Forms embed guide →</a>
+    </div>
+    <!-- Styled fallback form — wire to Google Forms action URL -->
+    <form class="styled-form" id="contactForm" onsubmit="handleFormSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" name="entry.111111111" placeholder="Elena" required>
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" name="entry.222222222" placeholder="Marchetti" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address *</label>
+        <input type="email" name="entry.333333333" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Enquiry Type</label>
+        <select name="entry.444444444">
+          <option value="">Select a category</option>
+          <option>General Enquiry</option>
+          <option>Script / Project Submission</option>
+          <option>Investment Opportunities</option>
+          <option>Venue Partnership</option>
+          <option>Technical Crew Hire</option>
+          <option>Press & Media</option>
+          <option>Education & Outreach</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Production / Project Name (if applicable)</label>
+        <input type="text" name="entry.555555555" placeholder="My Project Title">
+      </div>
+      <div class="form-group">
+        <label>Message *</label>
+        <textarea name="entry.666666666" rows="5" placeholder="Tell us about your project, enquiry, or interest..." required></textarea>
+      </div>
+      <button type="submit" class="form-submit">Send Message</button>
+      <p class="gform-notice" style="font-size:0.75rem;color:var(--muted);margin-top:12px;line-height:1.5">
+        By submitting this form you agree to our privacy policy. APEX Productions will never share your information with third parties.
+      </p>
+    </form>
+    <p class="gform-link">
+      Prefer to use our direct Google Form?
+      <a href="https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform" target="_blank">Open in Google Forms →</a>
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#hero" class="nav-logo">APEX<span> Productions</span></a>
+      <p>Award-winning production company creating theatre, film, and live experiences that challenge, inspire, and endure. New York · Los Angeles.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Productions</h4>
+      <ul>
+        <li><a href="#productions">The Hollow Season</a></li>
+        <li><a href="#productions">Before the Light Breaks</a></li>
+        <li><a href="#productions">Neon Ancestors</a></li>
+        <li><a href="#productions">Echoes in the Archive</a></li>
+        <li><a href="#productions">Glass Meridian (Revival)</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#vision">Our Vision</a></li>
+        <li><a href="#crew">Meet the Team</a></li>
+        <li><a href="#credits">Production Credits</a></li>
+        <li><a href="#">Press Room</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="#contact">Contact Us</a></li>
+        <li><a href="#">Script Submissions</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Newsletter</a></li>
+        <li><a href="#">Education</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 APEX Productions LLC. All rights reserved. <a href="#">Privacy Policy</a> · <a href="#">Terms</a></p>
+    <p>Designed with intention. Built for the stage.</p>
+  </div>
+</footer>
+
+<script>
+// ── Cursor ──
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => {
+    ring.style.left = e.clientX + 'px';
+    ring.style.top = e.clientY + 'px';
+  }, 60);
+});
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '20px'; cursor.style.height = '20px';
+    ring.style.width = '50px'; ring.style.height = '50px';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '10px'; cursor.style.height = '10px';
+    ring.style.width = '36px'; ring.style.height = '36px';
+  });
+});
+
+// ── Nav scroll ──
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── Reveal on scroll ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── Tabs ──
+function switchTab(id, btn) {
+  document.querySelectorAll('.crew-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.crew-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Filter ──
+function filterProductions(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.production-card').forEach(card => {
+    card.style.display = (type === 'all' || card.dataset.type === type) ? '' : 'none';
+  });
+}
+
+// ── Form ──
+function handleFormSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = 'Sending…';
+  setTimeout(() => {
+    btn.textContent = '✓ Message Sent';
+    btn.style.background = '#2d7a2d';
+    btn.style.color = '#fff';
+    e.target.reset();
+    setTimeout(() => {
+      btn.textContent = 'Send Message';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 3500);
+  }, 1200);
+  // Real Google Forms submission: change form action to your Google Forms URL
+  // and use method="POST" with the correct entry field names
+}
+</script>
+</body>
+</html>
